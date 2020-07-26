@@ -1,0 +1,97 @@
+<script>
+    let activeEffect
+    class Dep {
+        subscribers = new Set()
+        
+        depend(){
+            if(activeEffect) {
+                this.subscribers.add(activeEffect)
+            }
+        }
+        notify() {
+            this.subscribers.forEach(effect => {
+                effect()
+            })
+        }
+    }
+    function watchEffect(effect){
+        activeEffect = effect
+        effect()
+        activeEffect = null
+    }
+
+    const targetMap = new WeakMap()
+    function getDep(target, key) {
+        let depsMap = targetMap.get(target)
+        if(!depsMap){
+            depsMap = new Map()
+            targetMap.set(target, depsMap)
+        }
+        let dep = depsMap.get(key)
+        if(!dep) {
+            dep = new Dep()
+            depsMap.set(key, dep)
+        }
+        return dep
+    }
+
+    /**
+     * Why weakMap here？
+     *   1、key(target) is object,a weakMap can only use objects as keys
+     *   2、this target can be garbage collected,and its associated value entry in the weakMap
+     *      will also be garbage collected. 
+     *   Map && WeakMap 
+     *   Array's push pop ... surport too
+     */
+    const reactiveHandlers = {
+        get(target, key,receiver){
+            const dep = getDep(target, key)
+            dep.depend()
+            return Reflect.get(target, key,receiver)
+        },
+        set(target, key, value, receiver) {
+            const dep = getDep(target, key)
+            const result = Reflect.set(target, key, value, receiver)
+            dep.notify()
+            return result
+        },
+        has(){
+            // 'msg' in state
+        },
+        ownKeys(){
+            // for (const key in xxx)
+            // Object.keys(state)
+        }
+    }
+
+    function reactive(raw) {
+        // Object.keys(raw).forEach(key => {
+        //     const dep = new Dep()
+        //     let value = raw[key]
+
+        //     Object.defineProperty(raw, key, {
+        //         get() {
+        //             dep.depend()
+        //             return value
+        //         },
+        //         set(newvalue) {
+        //             value = newvalue
+        //             dep.notify()
+        //         }
+        //     })
+        // })
+        // return raw
+        return new Proxy(raw, reactiveHandlers)
+    }
+
+    const state = reactive({
+        count:0
+    })
+    watchEffect(() => {
+        console.log(state.count)
+        // console.log('msg' in state)
+        // for (const key in xxx)
+        // Object.keys(state).forEach(key=>{state[key]})
+    })
+    state.count++
+</script>

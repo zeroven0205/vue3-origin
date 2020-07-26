@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function *show(){
+            console.log('aaa')
+            let a = yield 55;
+            console.log('bbbb '+a)
+            return 88
+        }
+        
+        function *test(){
+            console.log('ccc')
+            yield;
+            console.log('ddd')
+        }
+        let gen = show();
+        
+        let res1 = gen.next()
+        
+        // tst.next()
+        let res2 = gen.next({a:12,b:23})
+        console.log(res1)
+        console.log(res2)
+    </script>
+</body>
+</html>
