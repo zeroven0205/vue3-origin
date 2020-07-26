@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://unpkg.com/vue@next"></script>
+    <div id="app"></div>
+    <script>
+        // scoped slot, accept ths props，slot props，use it directly
+        const {createApp,h} = Vue
+        
+        // how to implementation 
+        const Mouse = {
+            data() {
+                return {
+                    x: 0,
+                    y: 0
+                }
+            },
+            methods: {
+                update(e) { // Here this method is in own namespace,don't need to worry about collision
+                    this.x = e.pageX
+                    this.y = e.pageY
+                }
+            },
+            mounted() {
+                window.addEventListener('mousemove', this.update)
+            },
+            unmounted(){
+                window.removeEventListener('mousemove',this.update)
+            },
+
+            render() {
+                return this.$slots.default && this.$slots.default({
+                    x: this.x,
+                    y: this.y
+                })
+            }
+        };
+
+        // 需要注入props时候的操作 inject props
+        const App = {
+            components: {Mouse},
+            template: `
+              <Mouse v-slot="{x,y}">
+                {{ x }} {{ y }} 
+              </Mouse>
+            `
+        }
+
+        createApp(App).mount('#app')
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://unpkg.com/vue@next"></script>
+    <div id="app"></div>
+    <script>
+        const {createApp,h} = Vue
+        
+        const MouseMixin = {
+            data() {
+                return {
+                    x: 0,
+                    y: 0
+                }
+            },
+            methods: {
+                update(e) {
+                    this.x = e.pageX
+                    this.y = e.pageY
+                }
+            },
+            mounted() {
+                window.addEventListener('mousemove', this.update)
+            },
+            unmounted(){
+                window.removeEventListener('mousemove',this.update)
+            }
+        }
+        const AnotherMixins = {
+            // todo 
+        }
+        // Mixins的问题：
+        //   多个Mixins时候 
+        //   1、function不知从哪里来；
+        //   2、namespace 冲突，跨项目组使用时候就是灾难
+        const App = {
+            mixins: [MouseMixin, AnotherMixins],
+            template: `{{ x }} {{ y }}`
+        }
+        // how to implementation 
+        // function withMoused(inner) {
+        //     return {
+        //         render() {
+        //             return h(inner)
+        //         }
+        //     }
+        // }
+
+        // 需要注入props时候的操作 inject props
+        // const App = withMoused({
+        //     props: ['x','y'],
+        //     template: `{{ x }} {{ y }}`
+        // })
+
+        createApp(App).mount('#app')
+    </script>
+</body>
+</html>
