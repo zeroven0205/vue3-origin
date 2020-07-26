@@ -1,0 +1,45 @@
+ <script>
+    import { reactive, ref, computed, watchEffect, watch, onMounted } from 'vue'
+
+    export default {
+        props:['id'],
+        // In vue 2.x
+        // created() {
+        //     this.fetchData(this.id)
+        // },
+        // method: {
+        //     fetchData(id) {
+        //         // 
+        //     }
+        // },
+        // watch(id){
+        //     this.fetchData(id)
+        // },
+        setup(props) {
+            const state = reactive({ count: 0 })
+            const fetchedData = ref(null)
+            watchEffect(() => {
+                fetch(`url${props}`).then(res => res.json()).then(data => {
+                    fetchedData.value = data
+                })
+                console.log(state.count)
+            })
+
+            // In vue2.x 
+            // const count = ref(0)
+            // watch(() => count, (count,oldCount) => { })
+
+            // const  plusOne = computed(() => state.count + 1)
+            // watch(() => [count,plusOne], ([count,plusOne],[oldCount,oldPlusOne]) => { })
+
+            // watch(() => state.count, (count, oldCount) => {})
+
+            onMounted(() => console.log('mounted'))
+            // rendering context,template
+            return{
+                state,
+                increment: () => { state.count++ }
+            }
+        }
+    }
+ </script>

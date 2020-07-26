@@ -1,0 +1,64 @@
+<!-- Composition -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://unpkg.com/vue@next"></script>
+    <div id="app"></div>
+    <script>
+        // scoped slot, accept ths props，slot props，use it directly
+        const {createApp,h,ref,onMounted,onUnmounted} = Vue
+        
+        function useMouse() {
+            const x = ref(0)
+            const y = ref(0)
+
+            onMounted(() => {
+                window.addEventListener('mousemove',update)
+            })
+
+            onUnmounted(() => {
+                window.removeEventListener('mousemove',update)
+            })
+
+            const update = e => {
+                x.value = e.pageX
+                y.value = e.pageY
+            }
+            return {
+                x,
+                y
+            }
+        }
+
+        function useFoo() {
+            return 'foo'
+        }
+
+        // 需要注入props时候的操作 inject props
+        const App = {
+            setup() {
+                // const {x, y} = useMouse()
+
+                // const {x:bar} = useBar()
+
+                const foo = useFoo()
+
+                return {
+                    // x,
+                    // y,
+                    foo,
+                    ...useMouse() // 注意只能放在末尾
+                }
+            },
+            template: `{{ x }} {{ y }} {{ foo }}`
+        }
+
+        createApp(App).mount('#app')
+    </script>
+</body>
+</html>
