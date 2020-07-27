@@ -32,7 +32,11 @@
             }
         }
         const AnotherMixins = {
-            // todo 
+            data() {
+                return {
+                    z: 120
+                }
+            },
         }
         // Mixins的问题：
         //   多个Mixins时候 
@@ -40,7 +44,7 @@
         //   2、namespace 冲突，跨项目组使用时候就是灾难
         const App = {
             mixins: [MouseMixin, AnotherMixins],
-            template: `{{ x }} {{ y }}`
+            template: `{{ x }} {{ y }} {{ z + x }}`
         }
         // how to implementation 
         // function withMoused(inner) {

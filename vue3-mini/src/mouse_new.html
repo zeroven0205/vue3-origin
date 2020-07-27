@@ -10,7 +10,6 @@
     <script src="https://unpkg.com/vue@next"></script>
     <div id="app"></div>
     <script>
-        // scoped slot, accept ths props，slot props，use it directly
         const {createApp,h,ref,onMounted,onUnmounted} = Vue
         
         function useMouse() {
@@ -39,7 +38,6 @@
             return 'foo'
         }
 
-        // 需要注入props时候的操作 inject props
         const App = {
             setup() {
                 // const {x, y} = useMouse()

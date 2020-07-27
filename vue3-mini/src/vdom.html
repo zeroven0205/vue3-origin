@@ -55,12 +55,11 @@
         ])
 
         mount(vdom, document.getElementById('app'))
-
+        
         function patch(n1, n2) {
             if(n1.tag ==n2.tag) {
-                // const el = n2.el = n1.el
-
-                const el = document.getElementById('app').children[0]
+                // const el = n2.el = n1.el // TODO  Here not work！！ Why
+                const el = document.getElementById('app').children[0] // zero's way 
                 // props
                 const oldProps = n1.props || {}
                 const newProps = n2.props || {}
@@ -122,7 +121,7 @@
         ])
 
         patch(vdom, vdom2)
-
+    // TODO multiple cases
     // <div v-for="item in list" :key="item.id"></div>
     // [
     //     {tag:'div',key:1},
