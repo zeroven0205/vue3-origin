@@ -59,7 +59,7 @@ function mount(vnode,container){
 function patch(n1, n2) {
     if(n1.tag ===n2.tag) {
         // const el = n2.el = n1.el // Why not work here????
-        const el = document.getElementById('app').children[0] // Zero's selfish tempt solution
+        const el = document.getElementById('app').children[0] // TODO Zero's selfish tempt solution
         // props
         const oldProps = n1.props || {}
         const newProps = n2.props || {}
@@ -116,7 +116,6 @@ function patch(n1, n2) {
 }
 
 // reactivity
-
 let activeEffect
 
 class Dep {
@@ -156,6 +155,7 @@ function getDep(target, key) {
     return dep
 }
 
+// 依赖收集模块，重点ES6的Reflect反射
 const reactiveHandlers = {
     get(target, key,receiver){
         const dep = getDep(target, key)
@@ -170,6 +170,7 @@ const reactiveHandlers = {
     }
 }
 
+// Proxy替代掉vue2.x中的 defineProperty
 function reactive(raw) {
     return new Proxy(raw, reactiveHandlers)
 }
@@ -183,7 +184,7 @@ const App = {
             onClick: () => {
                 this.data.count++
             }
-        }, String(this.data.count))
+        }, String(this.data.count)) // h方法第三个参数当前实现的仅有String类型
     }
 }
 
