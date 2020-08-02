@@ -1,0 +1,33 @@
+<script src="../node_modules/vue/dist/vue.js"></script>
+
+<div id="app">
+  <example :ok="ok"></example>
+  <button @click="ok = !ok"></button>
+</div>
+
+<script>
+const Foo = {
+  functional: true,
+  render: h => h('div', 'foo')
+}
+
+const Bar = {
+  functional: true,
+  render: h => h('div', 'bar')
+}
+
+Vue.component('example', {
+  functional: true,
+  props: {
+    ok: Boolean
+  },
+  render: (h, context) => h(context.props.ok ? Foo : Bar)
+})
+
+new Vue({
+  el: '#app',
+  data: {
+    ok: true
+  }
+})
+</script>
